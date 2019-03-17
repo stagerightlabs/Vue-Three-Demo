@@ -34,6 +34,12 @@ export default new Vuex.Store({
       state.width = width;
       state.height = height;
     },
+    INITIALIZE_RENDERER(state, el) {
+      state.renderer = new WebGLRenderer({ antialias: true });
+      state.renderer.setPixelRatio(window.devicePixelRatio);
+      state.renderer.setSize(state.width, state.height);
+      el.appendChild(state.renderer.domElement);
+    },
     INITIALIZE_CAMERA(state) {
       state.camera = new PerspectiveCamera(
         // 1. Field of View (degrees)
@@ -48,7 +54,10 @@ export default new Vuex.Store({
       state.camera.position.z = 500;
     },
     INITIALIZE_CONTROLS(state) {
-      state.controls = new TrackballControls(state.camera);
+      state.controls = new TrackballControls(
+        state.camera,
+        state.renderer.domElement
+      );
       state.controls.rotateSpeed = 1.0;
       state.controls.zoomSpeed = 1.2;
       state.controls.panSpeed = 0.8;
@@ -113,12 +122,6 @@ export default new Vuex.Store({
       var lineD = new Line(geometryD, materialD);
       state.scene.add(lineD);
     },
-    INITIALIZE_RENDERER(state, el) {
-      state.renderer = new WebGLRenderer({ antialias: true });
-      state.renderer.setPixelRatio(window.devicePixelRatio);
-      state.renderer.setSize(state.width, state.height);
-      el.appendChild(state.renderer.domElement);
-    },
     RESIZE(state, { width, height }) {
       state.width = width;
       state.height = height;
@@ -133,10 +136,10 @@ export default new Vuex.Store({
     INIT({ state, commit }, { width, height, el }) {
       return new Promise(resolve => {
         commit("SET_VIEWPORT_SIZE", { width, height });
+        commit("INITIALIZE_RENDERER", el);
         commit("INITIALIZE_CAMERA");
         commit("INITIALIZE_CONTROLS");
         commit("INITIALIZE_SCENE");
-        commit("INITIALIZE_RENDERER", el);
 
         // Initial scene rendering
         state.renderer.render(state.scene, state.camera);
