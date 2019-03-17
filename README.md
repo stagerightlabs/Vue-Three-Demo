@@ -1,34 +1,7 @@
 # vue-threejs-demo
 
-## Project setup
-```
-npm install
-```
+## Helpful Links
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+https://stackoverflow.com/questions/47849626/import-and-use-three-js-library-in-vue-component
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+https://www.reddit.com/r/vuejs/comments/7fdq9b/vue_and_threejs/
