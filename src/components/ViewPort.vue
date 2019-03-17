@@ -6,9 +6,6 @@
 import { mapMutations, mapActions } from "vuex";
 
 export default {
-  props: {
-    // ratio: { default: 9 / 16 }
-  },
   data() {
     return {
       height: 0
@@ -28,9 +25,12 @@ export default {
       window.addEventListener(
         "resize",
         () => {
-          this.RESIZE({ width: window.innerWidth, height: window.innerHeight });
+          this.RESIZE({
+            width: this.$el.offsetWidth,
+            height: this.$el.offsetHeight
+          });
         },
-        false
+        true
       );
     });
   }
