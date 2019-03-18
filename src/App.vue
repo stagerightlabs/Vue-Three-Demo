@@ -1,15 +1,18 @@
 <template>
   <div id="app">
-    <viewport ratio="1"></viewport>
+    <panel></panel>
+    <viewport></viewport>
   </div>
 </template>
 
 <script>
 import ViewPort from "@/components/ViewPort.vue";
+import ControlPanel from "@/components/ControlPanel.vue";
 
 export default {
   components: {
-    viewport: ViewPort
+    viewport: ViewPort,
+    panel: ControlPanel
   }
 };
 </script>
@@ -23,6 +26,9 @@ body {
 }
 body {
   margin: 0px;
+}
+canvas {
+  position: relative;
 }
 #app {
   height: 100%;
