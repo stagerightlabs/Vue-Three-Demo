@@ -33,7 +33,10 @@
           />
         </p>
       </div>
-      <div v-if="CAMERA_POSITION">
+      <div
+        v-if="CAMERA_POSITION"
+        class="border-b border-grey-darkest mb-2 pb-2"
+      >
         <p class="mb-1 text-grey-light font-bold">
           Camera Position
         </p>
@@ -54,6 +57,20 @@
             Reset Camera
           </button>
         </p>
+      </div>
+      <div class="flex justify-around">
+        <a
+          href="https://threejs.org/examples/?q=controls#misc_controls_trackball"
+          target="_blank"
+          class="text-grey-light no-underline hover:text-grey-lighter"
+          >Original &#8599;
+        </a>
+        <a
+          href="https://github.com/SRLabs/Vue-Three-Demo"
+          target="_blank"
+          class="text-grey-light no-underline hover:text-grey-lighter"
+          >Github &#8599;
+        </a>
       </div>
     </div>
   </div>
