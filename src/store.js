@@ -27,7 +27,9 @@ export default new Vuex.Store({
     camera: null,
     controls: null,
     scene: null,
-    renderer: null
+    renderer: null,
+    axisLines: [],
+    pyramids: []
   },
   getters: {
     CAMERA_POSITION: state => {
@@ -91,8 +93,10 @@ export default new Vuex.Store({
         mesh.position.z = (Math.random() - 0.5) * 1000;
         mesh.updateMatrix();
         mesh.matrixAutoUpdate = false;
-        state.scene.add(mesh);
+        state.pyramids.push(mesh);
       }
+      state.scene.add(...state.pyramids);
+
       // lights
       var lightA = new DirectionalLight(0xffffff);
       lightA.position.set(1, 1, 1);
@@ -103,29 +107,31 @@ export default new Vuex.Store({
       var lightC = new AmbientLight(0x222222);
       state.scene.add(lightC);
 
-      // Axis 1
+      // Axis Line 1
       var materialB = new LineBasicMaterial({ color: 0x0000ff });
       var geometryB = new Geometry();
       geometryB.vertices.push(new Vector3(0, 0, 0));
       geometryB.vertices.push(new Vector3(0, 1000, 0));
-      var line = new Line(geometryB, materialB);
-      state.scene.add(line);
+      var lineA = new Line(geometryB, materialB);
+      state.axisLines.push(lineA);
 
-      // Axis 2
+      // Axis Line 2
       var materialC = new LineBasicMaterial({ color: 0x00ff00 });
       var geometryC = new Geometry();
       geometryC.vertices.push(new Vector3(0, 0, 0));
       geometryC.vertices.push(new Vector3(1000, 0, 0));
       var lineB = new Line(geometryC, materialC);
-      state.scene.add(lineB);
+      state.axisLines.push(lineB);
 
       // Axis 3
       var materialD = new LineBasicMaterial({ color: 0xff0000 });
       var geometryD = new Geometry();
       geometryD.vertices.push(new Vector3(0, 0, 0));
       geometryD.vertices.push(new Vector3(0, 0, 1000));
-      var lineD = new Line(geometryD, materialD);
-      state.scene.add(lineD);
+      var lineC = new Line(geometryD, materialD);
+      state.axisLines.push(lineC);
+
+      state.scene.add(...state.axisLines);
     },
     RESIZE(state, { width, height }) {
       state.width = width;
@@ -146,7 +152,24 @@ export default new Vuex.Store({
         state.camera.rotation.set(0, 0, 0);
         state.camera.quaternion.set(0, 0, 0, 1);
         state.camera.up.set(0, 1, 0);
+        state.controls.target.set(0, 0, 0);
       }
+    },
+    HIDE_AXIS_LINES(state) {
+      state.scene.remove(...state.axisLines);
+      state.renderer.render(state.scene, state.camera);
+    },
+    SHOW_AXIS_LINES(state) {
+      state.scene.add(...state.axisLines);
+      state.renderer.render(state.scene, state.camera);
+    },
+    HIDE_PYRAMIDS(state) {
+      state.scene.remove(...state.pyramids);
+      state.renderer.render(state.scene, state.camera);
+    },
+    SHOW_PYRAMIDS(state) {
+      state.scene.add(...state.pyramids);
+      state.renderer.render(state.scene, state.camera);
     }
   },
   actions: {
