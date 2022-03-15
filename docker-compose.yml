@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+  node:
+    build:
+      context: docker/node
+    volumes:
+      - ./:/var/www:cached
+
+  dev:
+    build:
+      context: docker/node
+    volumes:
+      - ./:/var/www:cached
+    ports:
+      - 3000:3000
+      - 5050:5050
+    command: ['npm', 'run', 'dev']
