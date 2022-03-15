@@ -1,18 +1,11 @@
-# vue-three-demo
+# vue-threejs-demo
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a Proof-Of-Concept integration of Vue.js and Three.js. I have converted the Three.js [Trackball Control Example](https://threejs.org/examples/?q=cont#misc_controls_trackball) to a Vue/Vuex application and added some additional UI sugar on top.
 
-## Recommended IDE Setup
+[See the demo here](https://vuethree.stagerightlabs.com/)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
+## Project setup
+```
 npm install
 ```
 
@@ -33,3 +26,15 @@ npm run build
 ```sh
 npm run lint
 ```
+
+## Helpful Links
+
+https://stackoverflow.com/questions/47849626/import-and-use-three-js-library-in-vue-component
+
+https://www.reddit.com/r/vuejs/comments/7fdq9b/vue_and_threejs/
+
+https://stackoverflow.com/questions/71083549/why-do-not-mutate-vuex-store-state-outside-mutation-handlers-error-shows-up
+
+## Thanks
+
+Special thanks to @Camil88 for sorting out some important reactivity issues.  See here: https://github.com/stagerightlabs/Vue-Three-Demo/issues/5
