@@ -1,11 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { usePyramidsStore } from '@/stores/pyramids'
+import { ref, onMounted } from "vue";
+import { usePyramidsStore } from "@/stores/pyramids";
 
 let height = 0;
 let width = 0;
-const store = usePyramidsStore()
-const viewport = ref(null)
+const store = usePyramidsStore();
+const viewport = ref(null);
 
 const { INIT, ANIMATE, RESIZE } = store;
 
@@ -22,7 +22,7 @@ onMounted(() => {
       true
     );
   });
-})
+});
 </script>
 
 <template>

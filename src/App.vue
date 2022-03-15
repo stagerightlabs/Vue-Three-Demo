@@ -5,8 +5,8 @@ import ControlPanel from "@/components/ControlPanel.vue";
 export default {
   components: {
     viewport: ViewPort,
-    panel: ControlPanel
-  }
+    panel: ControlPanel,
+  },
 };
 </script>
 

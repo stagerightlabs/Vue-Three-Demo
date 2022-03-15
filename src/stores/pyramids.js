@@ -1,6 +1,6 @@
-import { markRaw } from 'vue';
-import { defineStore } from 'pinia'
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
+import { markRaw } from "vue";
+import { defineStore } from "pinia";
+import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import {
   AmbientLight,
   BufferGeometry,
@@ -15,10 +15,10 @@ import {
   PerspectiveCamera,
   Scene,
   Vector3,
-  WebGLRenderer
-} from 'three';
+  WebGLRenderer,
+} from "three";
 
-export const usePyramidsStore = defineStore('scene', {
+export const usePyramidsStore = defineStore("scene", {
   state: () => {
     return {
       width: 0,
@@ -28,13 +28,13 @@ export const usePyramidsStore = defineStore('scene', {
       scene: null,
       renderer: null,
       axisLines: [],
-      pyramids: []
-    }
+      pyramids: [],
+    };
   },
   getters: {
     CAMERA_POSITION: (state) => {
       return state.camera ? state.camera.position : null;
-    }
+    },
   },
   actions: {
     SET_VIEWPORT_SIZE(width, height) {
@@ -62,7 +62,7 @@ export const usePyramidsStore = defineStore('scene', {
       );
       camera.position.z = 500;
 
-      this.camera = camera
+      this.camera = camera;
     },
     INITIALIZE_CONTROLS() {
       const controls = new TrackballControls(
@@ -78,7 +78,7 @@ export const usePyramidsStore = defineStore('scene', {
       controls.dynamicDampingFactor = 0.3;
       controls.keys = [65, 83, 68];
 
-      this.controls = markRaw(controls)
+      this.controls = markRaw(controls);
     },
     UPDATE_CONTROLS() {
       this.controls.update();
@@ -93,7 +93,7 @@ export const usePyramidsStore = defineStore('scene', {
       var pyramidGeometry = new CylinderBufferGeometry(0, 10, 30, 4, 1);
       var pyramidMaterial = new MeshPhongMaterial({
         color: 0xffffff,
-        flatShading: true
+        flatShading: true,
       });
       for (var i = 0; i < 500; i++) {
         var mesh = new Mesh(pyramidGeometry, pyramidMaterial);
@@ -121,8 +121,10 @@ export const usePyramidsStore = defineStore('scene', {
       const axisLine1Points = [];
       axisLine1Points.push(new Vector3(0, 0, 0));
       axisLine1Points.push(new Vector3(0, 1000, 0));
-      let axisLine1Geometry = new BufferGeometry().setFromPoints(axisLine1Points);
-      let axisLine1 = new Line(axisLine1Geometry, axisLine1Material)
+      let axisLine1Geometry = new BufferGeometry().setFromPoints(
+        axisLine1Points
+      );
+      let axisLine1 = new Line(axisLine1Geometry, axisLine1Material);
       this.axisLines.push(markRaw(axisLine1));
 
       // Axis Line 2
@@ -130,7 +132,9 @@ export const usePyramidsStore = defineStore('scene', {
       const axisLine2Points = [];
       axisLine2Points.push(new Vector3(0, 0, 0));
       axisLine2Points.push(new Vector3(1000, 0, 0));
-      let axisLine2Geometry = new BufferGeometry().setFromPoints(axisLine2Points);
+      let axisLine2Geometry = new BufferGeometry().setFromPoints(
+        axisLine2Points
+      );
       let axisLine2 = new Line(axisLine2Geometry, axisLine2Material);
       this.axisLines.push(markRaw(axisLine2));
 
@@ -139,12 +143,14 @@ export const usePyramidsStore = defineStore('scene', {
       const axisLine3Points = [];
       axisLine3Points.push(new Vector3(0, 0, 0));
       axisLine3Points.push(new Vector3(0, 0, 1000));
-      let axisLine3Geometry = new BufferGeometry().setFromPoints(axisLine3Points);
+      let axisLine3Geometry = new BufferGeometry().setFromPoints(
+        axisLine3Points
+      );
       let axisLine3 = new Line(axisLine3Geometry, axisLine3Material);
       this.axisLines.push(markRaw(axisLine3));
 
       scene.add(...this.axisLines);
-      this.scene = markRaw(scene)
+      this.scene = markRaw(scene);
     },
     RESIZE(width, height) {
       this.width = width;
@@ -185,7 +191,7 @@ export const usePyramidsStore = defineStore('scene', {
       this.RENDER();
     },
     INIT(width, height, el) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         this.SET_VIEWPORT_SIZE(width, height);
         this.INITIALIZE_RENDERER(el);
         this.INITIALIZE_CAMERA();
@@ -205,7 +211,6 @@ export const usePyramidsStore = defineStore('scene', {
       });
     },
     RENDER() {
-
       this.renderer.render(this.scene, this.camera);
     },
     ANIMATE() {
@@ -213,6 +218,6 @@ export const usePyramidsStore = defineStore('scene', {
         this.ANIMATE();
         this.controls.update();
       });
-    }
-  }
+    },
+  },
 });

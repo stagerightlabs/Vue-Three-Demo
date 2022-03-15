@@ -1,5 +1,5 @@
 <script setup>
-import { usePyramidsStore } from '@/stores/pyramids'
+import { usePyramidsStore } from "@/stores/pyramids";
 
 const store = usePyramidsStore();
 let axisLinesVisible = true;
@@ -35,15 +35,11 @@ function resetCameraPosition() {
   <div
     class="flex flex-col absolute w-64 h-auto text-white rounded-md mr-2 mb-2 z-10 border border-gray-700 bottom-0 right-0"
   >
-    <div class="p-2 border-b border-gray-700 bg-gray-400">
-      Controls
-    </div>
-    <div class=" h-full rounded-b flex flex-col bg-white">
+    <div class="p-2 border-b border-gray-700 bg-gray-400">Controls</div>
+    <div class="h-full rounded-b flex flex-col bg-white">
       <!-- Toggles -->
       <div class="border-b border-gray-700 p-2">
-        <p class="mb-1 text-gray-600 font-bold">
-          Scenery
-        </p>
+        <p class="mb-1 text-gray-600 font-bold">Scenery</p>
         <p class="flex items-center justify-between text-gray-500">
           Pyramids
           <input
@@ -66,13 +62,8 @@ function resetCameraPosition() {
         </p>
       </div>
       <!-- Camera Position -->
-      <div
-        v-if="store.CAMERA_POSITION"
-        class="p-2 border-b border-gray-700"
-      >
-        <p class="mb-1 text-gray-600 font-bold">
-          Camera Position
-        </p>
+      <div v-if="store.CAMERA_POSITION" class="p-2 border-b border-gray-700">
+        <p class="mb-1 text-gray-600 font-bold">Camera Position</p>
         <p class="flex justify-between w-full mb-2 text-gray-500">
           X: <span>{{ store.CAMERA_POSITION.x }}</span>
         </p>
