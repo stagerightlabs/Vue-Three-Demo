@@ -37,4 +37,4 @@ https://stackoverflow.com/questions/71083549/why-do-not-mutate-vuex-store-state-
 
 ## Thanks
 
-Special thanks to @Camil88 for sorting out some important reactivity issues.  See here: https://github.com/stagerightlabs/Vue-Three-Demo/issues/5
+Special thanks to [@Camil88](https://github.com/Camil88) for sorting out some important reactivity issues.  See here: https://github.com/stagerightlabs/Vue-Three-Demo/issues/5
