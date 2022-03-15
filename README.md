@@ -1,27 +1,35 @@
-# vue-threejs-demo
+# vue-three-demo
 
-This is a Proof-Of-Concept integration of Vue.js and Three.js.   I have converted the Three.js [Trackball Control Example](https://threejs.org/examples/?q=cont#misc_controls_trackball) to a Vue/Vuex application and added some additional UI sugar on top.
+This template should help get you started developing with Vue 3 in Vite.
 
-[See the demo here](https://vuethree.stagerightlabs.com/)
+## Recommended IDE Setup
 
-## Project setup
-```
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.vscode-typescript-vue-plugin).
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## Project Setup
+
+```sh
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
 ```
 
-### Compiles and minifies for production
-```
+### Compile and Minify for Production
+
+```sh
 npm run build
 ```
 
+### Lint with [ESLint](https://eslint.org/)
 
-## Helpful Links
-
-https://stackoverflow.com/questions/47849626/import-and-use-three-js-library-in-vue-component
-
-https://www.reddit.com/r/vuejs/comments/7fdq9b/vue_and_threejs/
+```sh
+npm run lint
+```
