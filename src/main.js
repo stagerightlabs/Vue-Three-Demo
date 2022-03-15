@@ -1,12 +1,11 @@
-import Vue from "vue";
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+
 import App from "./App.vue";
-import router from "./router";
-import store from "./store";
+import "./assets/tailwind.css";
 
-Vue.config.productionTip = false;
+const app = createApp(App);
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount("#app");
+app.use(createPinia());
+
+app.mount("#app");

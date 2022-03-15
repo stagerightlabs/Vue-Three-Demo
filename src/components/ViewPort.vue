@@ -1,41 +1,33 @@
-<template>
-  <div class="viewport"></div>
-</template>
+<script setup>
+import { ref, onMounted } from "vue";
+import { usePyramidsStore } from "@/stores/pyramids";
 
-<script>
-import { mapMutations, mapActions } from "vuex";
+let height = 0;
+let width = 0;
+const store = usePyramidsStore();
+const viewport = ref(null);
 
-export default {
-  data() {
-    return {
-      height: 0
-    };
-  },
-  methods: {
-    ...mapMutations(["RESIZE"]),
-    ...mapActions(["INIT", "ANIMATE"])
-  },
-  mounted() {
-    this.INIT({
-      width: this.$el.offsetWidth,
-      height: this.$el.offsetHeight,
-      el: this.$el
-    }).then(() => {
-      this.ANIMATE();
-      window.addEventListener(
-        "resize",
-        () => {
-          this.RESIZE({
-            width: this.$el.offsetWidth,
-            height: this.$el.offsetHeight
-          });
-        },
-        true
-      );
-    });
-  }
-};
+const { INIT, ANIMATE, RESIZE } = store;
+
+onMounted(() => {
+  height = viewport.value.offsetHeight;
+  width = viewport.value.offsetWidth;
+  INIT(width, height, viewport.value).then(() => {
+    ANIMATE();
+    window.addEventListener(
+      "resize",
+      () => {
+        RESIZE(viewport.value.offsetWidth, viewport.value.offsetHeight);
+      },
+      true
+    );
+  });
+});
 </script>
+
+<template>
+  <div class="viewport" ref="viewport"></div>
+</template>
 
 <style>
 .viewport {

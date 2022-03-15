@@ -1,18 +1,46 @@
+<script setup>
+import { usePyramidsStore } from "@/stores/pyramids";
+
+const store = usePyramidsStore();
+let axisLinesVisible = true;
+let pyramidsVisible = true;
+
+function togglePyramids() {
+  if (pyramidsVisible) {
+    store.HIDE_PYRAMIDS();
+    pyramidsVisible = false;
+  } else {
+    store.SHOW_PYRAMIDS();
+    pyramidsVisible = true;
+  }
+}
+
+function toggleAxisLines() {
+  if (axisLinesVisible) {
+    store.HIDE_AXIS_LINES();
+    axisLinesVisible = false;
+  } else {
+    store.SHOW_AXIS_LINES();
+    axisLinesVisible = true;
+  }
+}
+
+function resetCameraPosition() {
+  store.SET_CAMERA_POSITION(0, 0, 500);
+  store.RESET_CAMERA_ROTATION();
+}
+</script>
+
 <template>
   <div
-    class="flex flex-col absolute w-64 h-auto pin-r pin-b bg-grey-darkest text-white rounded mr-2 mb-2 z-10"
+    class="flex flex-col absolute w-64 h-auto text-white rounded-md mr-2 mb-2 z-10 border border-gray-700 bottom-0 right-0"
   >
-    <div class="p-2 mt-1">
-      Controls
-    </div>
-    <div
-      class="bg-grey-dark h-full p-3 rounded-b flex flex-col border border-grey-darkest"
-    >
-      <div class="border-b border-grey-darkest mb-2 pb-2">
-        <p class="mb-1 text-grey-light font-bold">
-          Scenery
-        </p>
-        <p class="flex items-center justify-between mb-1">
+    <div class="p-2 border-b border-gray-700 bg-gray-400">Controls</div>
+    <div class="h-full rounded-b flex flex-col bg-white">
+      <!-- Toggles -->
+      <div class="border-b border-gray-700 p-2">
+        <p class="mb-1 text-gray-600 font-bold">Scenery</p>
+        <p class="flex items-center justify-between text-gray-500">
           Pyramids
           <input
             type="checkbox"
@@ -22,7 +50,7 @@
             @click="togglePyramids"
           />
         </p>
-        <p class="flex items-center justify-between">
+        <p class="flex items-center justify-between text-gray-500">
           Axis Lines
           <input
             type="checkbox"
@@ -33,92 +61,42 @@
           />
         </p>
       </div>
-      <div
-        v-if="CAMERA_POSITION"
-        class="border-b border-grey-darkest mb-2 pb-2"
-      >
-        <p class="mb-1 text-grey-light font-bold">
-          Camera Position
+      <!-- Camera Position -->
+      <div v-if="store.CAMERA_POSITION" class="p-2 border-b border-gray-700">
+        <p class="mb-1 text-gray-600 font-bold">Camera Position</p>
+        <p class="flex justify-between w-full mb-2 text-gray-500">
+          X: <span>{{ store.CAMERA_POSITION.x }}</span>
         </p>
-        <p class="flex justify-between w-full mb-2 text-grey-light">
-          X:<span class="text-white">{{ CAMERA_POSITION.x }}</span>
+        <p class="flex justify-between w-full mb-2 text-gray-500">
+          Y: <span>{{ store.CAMERA_POSITION.y }}</span>
         </p>
-        <p class="flex justify-between w-full mb-2 text-grey-light">
-          Y:<span class="text-white">{{ CAMERA_POSITION.y }}</span>
-        </p>
-        <p class="flex justify-between w-full mb-2 text-grey-light">
-          Z:<span class="text-white">{{ CAMERA_POSITION.z }}</span>
+        <p class="flex justify-between w-full mb-2 text-gray-500">
+          Z: <span>{{ store.CAMERA_POSITION.z }}</span>
         </p>
         <p class="flex items-center">
           <button
-            class="bg-grey-light cursor-pointer shadow p-2 mx-auto"
+            class="bg-gray-300 text-gray-600 cursor-pointer shadow p-2 mx-auto"
             @click="resetCameraPosition"
           >
             Reset Camera
           </button>
         </p>
       </div>
+      <!-- Links -->
       <div class="flex justify-around">
         <a
           href="https://threejs.org/examples/?q=controls#misc_controls_trackball"
           target="_blank"
-          class="text-grey-light no-underline hover:text-grey-lighter"
+          class="text-gray-600 no-underline hover:text-gray-500 w-1/2 text-center p-2"
           >Original &#8599;
         </a>
         <a
           href="https://github.com/SRLabs/Vue-Three-Demo"
           target="_blank"
-          class="text-grey-light no-underline hover:text-grey-lighter"
+          class="text-gray-600 no-underline hover:text-gray-500 w-1/2 text-center p-2"
           >Github &#8599;
         </a>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-import { mapGetters, mapMutations } from "vuex";
-export default {
-  data() {
-    return {
-      axisLinesVisible: true,
-      pyramidsVisible: true
-    };
-  },
-  computed: {
-    ...mapGetters(["CAMERA_POSITION"])
-  },
-  methods: {
-    ...mapMutations([
-      "SET_CAMERA_POSITION",
-      "RESET_CAMERA_ROTATION",
-      "HIDE_AXIS_LINES",
-      "SHOW_AXIS_LINES",
-      "HIDE_PYRAMIDS",
-      "SHOW_PYRAMIDS"
-    ]),
-    resetCameraPosition() {
-      this.SET_CAMERA_POSITION({ x: 0, y: 0, z: 500 });
-      this.RESET_CAMERA_ROTATION();
-    },
-    toggleAxisLines() {
-      if (this.axisLinesVisible) {
-        this.HIDE_AXIS_LINES();
-        this.axisLinesVisible = false;
-      } else {
-        this.SHOW_AXIS_LINES();
-        this.axisLinesVisible = true;
-      }
-    },
-    togglePyramids() {
-      if (this.pyramidsVisible) {
-        this.HIDE_PYRAMIDS();
-        this.pyramidsVisible = false;
-      } else {
-        this.SHOW_PYRAMIDS();
-        this.pyramidsVisible = true;
-      }
-    }
-  }
-};
-</script>
