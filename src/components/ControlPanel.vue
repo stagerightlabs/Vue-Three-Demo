@@ -2,16 +2,12 @@
   <div
     class="flex flex-col absolute w-64 h-auto pin-r pin-b bg-grey-darkest text-white rounded mr-2 mb-2 z-10"
   >
-    <div class="p-2 mt-1">
-      Controls
-    </div>
+    <div class="p-2 mt-1">Controls</div>
     <div
       class="bg-grey-dark h-full p-3 rounded-b flex flex-col border border-grey-darkest"
     >
       <div class="border-b border-grey-darkest mb-2 pb-2">
-        <p class="mb-1 text-grey-light font-bold">
-          Scenery
-        </p>
+        <p class="mb-1 text-grey-light font-bold">Scenery</p>
         <p class="flex items-center justify-between mb-1">
           Pyramids
           <input
@@ -34,20 +30,18 @@
         </p>
       </div>
       <div
-        v-if="CAMERA_POSITION"
+        v-if="store.cameraPosition"
         class="border-b border-grey-darkest mb-2 pb-2"
       >
-        <p class="mb-1 text-grey-light font-bold">
-          Camera Position
+        <p class="mb-1 text-grey-light font-bold">Camera Position</p>
+        <p class="flex justify-between w-full mb-2 text-grey-light">
+          X:<span class="text-white">{{ store.cameraPosition.x }}</span>
         </p>
         <p class="flex justify-between w-full mb-2 text-grey-light">
-          X:<span class="text-white">{{ CAMERA_POSITION.x }}</span>
+          Y:<span class="text-white">{{ store.cameraPosition.y }}</span>
         </p>
         <p class="flex justify-between w-full mb-2 text-grey-light">
-          Y:<span class="text-white">{{ CAMERA_POSITION.y }}</span>
-        </p>
-        <p class="flex justify-between w-full mb-2 text-grey-light">
-          Z:<span class="text-white">{{ CAMERA_POSITION.z }}</span>
+          Z:<span class="text-white">{{ store.cameraPosition.z }}</span>
         </p>
         <p class="flex items-center">
           <button
@@ -77,48 +71,42 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { useThreeStore } from "@/store";
+
 export default {
+  setup() {
+    const store = useThreeStore();
+    return { store };
+  },
   data() {
     return {
       axisLinesVisible: true,
-      pyramidsVisible: true
+      pyramidsVisible: true,
     };
   },
-  computed: {
-    ...mapGetters(["CAMERA_POSITION"])
-  },
   methods: {
-    ...mapMutations([
-      "SET_CAMERA_POSITION",
-      "RESET_CAMERA_ROTATION",
-      "HIDE_AXIS_LINES",
-      "SHOW_AXIS_LINES",
-      "HIDE_PYRAMIDS",
-      "SHOW_PYRAMIDS"
-    ]),
     resetCameraPosition() {
-      this.SET_CAMERA_POSITION({ x: 0, y: 0, z: 500 });
-      this.RESET_CAMERA_ROTATION();
+      this.store.setCameraPosition({ x: 0, y: 0, z: 500 });
+      this.store.resetCameraRotation();
     },
     toggleAxisLines() {
       if (this.axisLinesVisible) {
-        this.HIDE_AXIS_LINES();
+        this.store.hideAxisLines();
         this.axisLinesVisible = false;
       } else {
-        this.SHOW_AXIS_LINES();
+        this.store.showAxisLines();
         this.axisLinesVisible = true;
       }
     },
     togglePyramids() {
       if (this.pyramidsVisible) {
-        this.HIDE_PYRAMIDS();
+        this.store.hidePyramids();
         this.pyramidsVisible = false;
       } else {
-        this.SHOW_PYRAMIDS();
+        this.store.showPyramids();
         this.pyramidsVisible = true;
       }
-    }
-  }
+    },
+  },
 };
 </script>
