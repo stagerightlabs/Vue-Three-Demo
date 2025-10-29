@@ -28,13 +28,11 @@ export const useThreeStore = defineStore('three', {
     scene: null,
     renderer: null,
     axisLines: [],
-    pyramids: []
+    pyramids: [],
+    cameraPosition: { x: 0, y: 0, z: 0 }
   }),
 
   getters: {
-    cameraPosition: (state) => {
-      return state.camera ? state.camera.position : null
-    }
   },
 
   actions: {
@@ -62,6 +60,7 @@ export const useThreeStore = defineStore('three', {
         1000
       ))
       this.camera.position.z = 500
+      this.cameraPosition = { x: 0, y: 0, z: 500 }
     },
 
     initializeControls() {
@@ -166,6 +165,7 @@ export const useThreeStore = defineStore('three', {
     setCameraPosition({ x, y, z }) {
       if (this.camera) {
         this.camera.position.set(x, y, z)
+        this.cameraPosition = { x, y, z }
       }
     },
 
@@ -219,6 +219,15 @@ export const useThreeStore = defineStore('three', {
       window.requestAnimationFrame(() => {
         this.animate()
         this.controls.update()
+
+        // Update reactive camera position for real-time display
+        if (this.camera) {
+          this.cameraPosition = {
+            x: Math.round(this.camera.position.x * 100) / 100,
+            y: Math.round(this.camera.position.y * 100) / 100,
+            z: Math.round(this.camera.position.z * 100) / 100
+          }
+        }
       })
     }
   }
