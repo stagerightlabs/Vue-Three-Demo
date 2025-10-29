@@ -1,27 +1,26 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { defineStore } from 'pinia'
+import { markRaw } from 'vue'
 import {
   Scene,
-  TrackballControls,
   PerspectiveCamera,
   WebGLRenderer,
   Color,
   FogExp2,
-  CylinderBufferGeometry,
+  CylinderGeometry,
   MeshPhongMaterial,
   Mesh,
   DirectionalLight,
   AmbientLight,
   LineBasicMaterial,
-  Geometry,
+  BufferGeometry,
   Vector3,
-  Line
-} from "three-full";
+  Line,
+  Float32BufferAttribute
+} from 'three'
+import { TrackballControls } from 'three/addons/controls/TrackballControls.js'
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-  state: {
+export const useThreeStore = defineStore('three', {
+  state: () => ({
     width: 0,
     height: 0,
     camera: null,
@@ -30,174 +29,197 @@ export default new Vuex.Store({
     renderer: null,
     axisLines: [],
     pyramids: []
-  },
+  }),
+
   getters: {
-    CAMERA_POSITION: state => {
-      return state.camera ? state.camera.position : null;
+    cameraPosition: (state) => {
+      return state.camera ? state.camera.position : null
     }
   },
-  mutations: {
-    SET_VIEWPORT_SIZE(state, { width, height }) {
-      state.width = width;
-      state.height = height;
+
+  actions: {
+    setViewportSize({ width, height }) {
+      this.width = width
+      this.height = height
     },
-    INITIALIZE_RENDERER(state, el) {
-      state.renderer = new WebGLRenderer({ antialias: true });
-      state.renderer.setPixelRatio(window.devicePixelRatio);
-      state.renderer.setSize(state.width, state.height);
-      el.appendChild(state.renderer.domElement);
+
+    initializeRenderer(el) {
+      this.renderer = markRaw(new WebGLRenderer({ antialias: true }))
+      this.renderer.setPixelRatio(window.devicePixelRatio)
+      this.renderer.setSize(this.width, this.height)
+      el.appendChild(this.renderer.domElement)
     },
-    INITIALIZE_CAMERA(state) {
-      state.camera = new PerspectiveCamera(
+
+    initializeCamera() {
+      this.camera = markRaw(new PerspectiveCamera(
         // 1. Field of View (degrees)
         60,
         // 2. Aspect ratio
-        state.width / state.height,
+        this.width / this.height,
         // 3. Near clipping plane
         1,
         // 4. Far clipping plane
         1000
-      );
-      state.camera.position.z = 500;
+      ))
+      this.camera.position.z = 500
     },
-    INITIALIZE_CONTROLS(state) {
-      state.controls = new TrackballControls(
-        state.camera,
-        state.renderer.domElement
-      );
-      state.controls.rotateSpeed = 1.0;
-      state.controls.zoomSpeed = 1.2;
-      state.controls.panSpeed = 0.8;
-      state.controls.noZoom = false;
-      state.controls.noPan = false;
-      state.controls.staticMoving = true;
-      state.controls.dynamicDampingFactor = 0.3;
-      state.controls.keys = [65, 83, 68];
+
+    initializeControls() {
+      this.controls = markRaw(new TrackballControls(
+        this.camera,
+        this.renderer.domElement
+      ))
+      this.controls.rotateSpeed = 1.0
+      this.controls.zoomSpeed = 1.2
+      this.controls.panSpeed = 0.8
+      this.controls.noZoom = false
+      this.controls.noPan = false
+      this.controls.staticMoving = true
+      this.controls.dynamicDampingFactor = 0.3
+      this.controls.keys = [65, 83, 68]
     },
-    UPDATE_CONTROLS(state) {
-      state.controls.update();
+
+    updateControls() {
+      this.controls.update()
     },
-    INITIALIZE_SCENE(state) {
-      state.scene = new Scene();
-      state.scene.background = new Color(0xcccccc);
-      state.scene.fog = new FogExp2(0xcccccc, 0.002);
-      var geometry = new CylinderBufferGeometry(0, 10, 30, 4, 1);
-      var material = new MeshPhongMaterial({
+
+    initializeScene() {
+      this.scene = markRaw(new Scene())
+      this.scene.background = new Color(0xcccccc)
+      this.scene.fog = new FogExp2(0xcccccc, 0.002)
+
+      var geometry = markRaw(new CylinderGeometry(0, 10, 30, 4, 1))
+      var material = markRaw(new MeshPhongMaterial({
         color: 0xffffff,
         flatShading: true
-      });
+      }))
+
       for (var i = 0; i < 500; i++) {
-        var mesh = new Mesh(geometry, material);
-        mesh.position.x = (Math.random() - 0.5) * 1000;
-        mesh.position.y = (Math.random() - 0.5) * 1000;
-        mesh.position.z = (Math.random() - 0.5) * 1000;
-        mesh.updateMatrix();
-        mesh.matrixAutoUpdate = false;
-        state.pyramids.push(mesh);
+        var mesh = markRaw(new Mesh(geometry, material))
+        mesh.position.x = (Math.random() - 0.5) * 1000
+        mesh.position.y = (Math.random() - 0.5) * 1000
+        mesh.position.z = (Math.random() - 0.5) * 1000
+        mesh.updateMatrix()
+        mesh.matrixAutoUpdate = false
+        this.pyramids.push(mesh)
       }
-      state.scene.add(...state.pyramids);
+      this.scene.add(...this.pyramids)
 
       // lights
-      var lightA = new DirectionalLight(0xffffff);
-      lightA.position.set(1, 1, 1);
-      state.scene.add(lightA);
-      var lightB = new DirectionalLight(0x002288);
-      lightB.position.set(-1, -1, -1);
-      state.scene.add(lightB);
-      var lightC = new AmbientLight(0x222222);
-      state.scene.add(lightC);
+      var lightA = markRaw(new DirectionalLight(0xffffff))
+      lightA.position.set(1, 1, 1)
+      this.scene.add(lightA)
 
-      // Axis Line 1
-      var materialB = new LineBasicMaterial({ color: 0x0000ff });
-      var geometryB = new Geometry();
-      geometryB.vertices.push(new Vector3(0, 0, 0));
-      geometryB.vertices.push(new Vector3(0, 1000, 0));
-      var lineA = new Line(geometryB, materialB);
-      state.axisLines.push(lineA);
+      var lightB = markRaw(new DirectionalLight(0x002288))
+      lightB.position.set(-1, -1, -1)
+      this.scene.add(lightB)
 
-      // Axis Line 2
-      var materialC = new LineBasicMaterial({ color: 0x00ff00 });
-      var geometryC = new Geometry();
-      geometryC.vertices.push(new Vector3(0, 0, 0));
-      geometryC.vertices.push(new Vector3(1000, 0, 0));
-      var lineB = new Line(geometryC, materialC);
-      state.axisLines.push(lineB);
+      var lightC = markRaw(new AmbientLight(0x222222))
+      this.scene.add(lightC)
 
-      // Axis 3
-      var materialD = new LineBasicMaterial({ color: 0xff0000 });
-      var geometryD = new Geometry();
-      geometryD.vertices.push(new Vector3(0, 0, 0));
-      geometryD.vertices.push(new Vector3(0, 0, 1000));
-      var lineC = new Line(geometryD, materialD);
-      state.axisLines.push(lineC);
+      // Axis Line 1 (Y-axis - Blue)
+      var materialB = markRaw(new LineBasicMaterial({ color: 0x0000ff }))
+      var geometryB = markRaw(new BufferGeometry())
+      const pointsB = [
+        new Vector3(0, 0, 0),
+        new Vector3(0, 1000, 0)
+      ]
+      geometryB.setFromPoints(pointsB)
+      var lineA = markRaw(new Line(geometryB, materialB))
+      this.axisLines.push(lineA)
 
-      state.scene.add(...state.axisLines);
+      // Axis Line 2 (X-axis - Green)
+      var materialC = markRaw(new LineBasicMaterial({ color: 0x00ff00 }))
+      var geometryC = markRaw(new BufferGeometry())
+      const pointsC = [
+        new Vector3(0, 0, 0),
+        new Vector3(1000, 0, 0)
+      ]
+      geometryC.setFromPoints(pointsC)
+      var lineB = markRaw(new Line(geometryC, materialC))
+      this.axisLines.push(lineB)
+
+      // Axis Line 3 (Z-axis - Red)
+      var materialD = markRaw(new LineBasicMaterial({ color: 0xff0000 }))
+      var geometryD = markRaw(new BufferGeometry())
+      const pointsD = [
+        new Vector3(0, 0, 0),
+        new Vector3(0, 0, 1000)
+      ]
+      geometryD.setFromPoints(pointsD)
+      var lineC = markRaw(new Line(geometryD, materialD))
+      this.axisLines.push(lineC)
+
+      this.scene.add(...this.axisLines)
     },
-    RESIZE(state, { width, height }) {
-      state.width = width;
-      state.height = height;
-      state.camera.aspect = width / height;
-      state.camera.updateProjectionMatrix();
-      state.renderer.setSize(width, height);
-      state.controls.handleResize();
-      state.renderer.render(state.scene, state.camera);
+
+    resize({ width, height }) {
+      this.width = width
+      this.height = height
+      this.camera.aspect = width / height
+      this.camera.updateProjectionMatrix()
+      this.renderer.setSize(width, height)
+      this.controls.handleResize()
+      this.renderer.render(this.scene, this.camera)
     },
-    SET_CAMERA_POSITION(state, { x, y, z }) {
-      if (state.camera) {
-        state.camera.position.set(x, y, z);
+
+    setCameraPosition({ x, y, z }) {
+      if (this.camera) {
+        this.camera.position.set(x, y, z)
       }
     },
-    RESET_CAMERA_ROTATION(state) {
-      if (state.camera) {
-        state.camera.rotation.set(0, 0, 0);
-        state.camera.quaternion.set(0, 0, 0, 1);
-        state.camera.up.set(0, 1, 0);
-        state.controls.target.set(0, 0, 0);
+
+    resetCameraRotation() {
+      if (this.camera) {
+        this.camera.rotation.set(0, 0, 0)
+        this.camera.quaternion.set(0, 0, 0, 1)
+        this.camera.up.set(0, 1, 0)
+        this.controls.target.set(0, 0, 0)
       }
     },
-    HIDE_AXIS_LINES(state) {
-      state.scene.remove(...state.axisLines);
-      state.renderer.render(state.scene, state.camera);
-    },
-    SHOW_AXIS_LINES(state) {
-      state.scene.add(...state.axisLines);
-      state.renderer.render(state.scene, state.camera);
-    },
-    HIDE_PYRAMIDS(state) {
-      state.scene.remove(...state.pyramids);
-      state.renderer.render(state.scene, state.camera);
-    },
-    SHOW_PYRAMIDS(state) {
-      state.scene.add(...state.pyramids);
-      state.renderer.render(state.scene, state.camera);
-    }
-  },
-  actions: {
-    INIT({ state, commit }, { width, height, el }) {
-      return new Promise(resolve => {
-        commit("SET_VIEWPORT_SIZE", { width, height });
-        commit("INITIALIZE_RENDERER", el);
-        commit("INITIALIZE_CAMERA");
-        commit("INITIALIZE_CONTROLS");
-        commit("INITIALIZE_SCENE");
 
-        // Initial scene rendering
-        state.renderer.render(state.scene, state.camera);
-
-        // Add an event listener that will re-render
-        // the scene when the controls are changed
-        state.controls.addEventListener("change", () => {
-          state.renderer.render(state.scene, state.camera);
-        });
-
-        resolve();
-      });
+    hideAxisLines() {
+      this.scene.remove(...this.axisLines)
+      this.renderer.render(this.scene, this.camera)
     },
-    ANIMATE({ state, dispatch }) {
+
+    showAxisLines() {
+      this.scene.add(...this.axisLines)
+      this.renderer.render(this.scene, this.camera)
+    },
+
+    hidePyramids() {
+      this.scene.remove(...this.pyramids)
+      this.renderer.render(this.scene, this.camera)
+    },
+
+    showPyramids() {
+      this.scene.add(...this.pyramids)
+      this.renderer.render(this.scene, this.camera)
+    },
+
+    async init({ width, height, el }) {
+      this.setViewportSize({ width, height })
+      this.initializeRenderer(el)
+      this.initializeCamera()
+      this.initializeControls()
+      this.initializeScene()
+
+      // Initial scene rendering
+      this.renderer.render(this.scene, this.camera)
+
+      // Add an event listener that will re-render
+      // the scene when the controls are changed
+      this.controls.addEventListener('change', () => {
+        this.renderer.render(this.scene, this.camera)
+      })
+    },
+
+    animate() {
       window.requestAnimationFrame(() => {
-        dispatch("ANIMATE");
-        state.controls.update();
-      });
+        this.animate()
+        this.controls.update()
+      })
     }
   }
-});
+})

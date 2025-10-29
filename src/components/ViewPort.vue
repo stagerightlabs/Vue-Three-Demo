@@ -3,37 +3,37 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from "vuex";
+import { useThreeStore } from "@/store";
 
 export default {
   data() {
     return {
-      height: 0
+      height: 0,
     };
   },
-  methods: {
-    ...mapMutations(["RESIZE"]),
-    ...mapActions(["INIT", "ANIMATE"])
-  },
   mounted() {
-    this.INIT({
-      width: this.$el.offsetWidth,
-      height: this.$el.offsetHeight,
-      el: this.$el
-    }).then(() => {
-      this.ANIMATE();
-      window.addEventListener(
-        "resize",
-        () => {
-          this.RESIZE({
-            width: this.$el.offsetWidth,
-            height: this.$el.offsetHeight
-          });
-        },
-        true
-      );
-    });
-  }
+    const store = useThreeStore();
+
+    store
+      .init({
+        width: this.$el.offsetWidth,
+        height: this.$el.offsetHeight,
+        el: this.$el,
+      })
+      .then(() => {
+        store.animate();
+        window.addEventListener(
+          "resize",
+          () => {
+            store.resize({
+              width: this.$el.offsetWidth,
+              height: this.$el.offsetHeight,
+            });
+          },
+          true
+        );
+      });
+  },
 };
 </script>
 
