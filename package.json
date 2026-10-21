@@ -20,5 +20,10 @@
     "vite": "^8.3.5",
     "eslint": "^9.14.0",
     "eslint-plugin-vue": "^9.29.1"
+  },
+  "overrides": {
+    "vue": {
+      "@vue/server-renderer": "3.5.42"
+    }
   }
 }
