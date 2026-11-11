@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    groups:
+      # Batch minor/patch bumps into one PR to reduce noise
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # three.js ships breaking changes in minor releases; upgrade manually
+      - dependency-name: three
+        update-types:
+          - version-update:semver-minor
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
