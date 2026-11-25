@@ -14,8 +14,7 @@ import {
   LineBasicMaterial,
   BufferGeometry,
   Vector3,
-  Line,
-  Float32BufferAttribute
+  Line
 } from 'three'
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js'
 
